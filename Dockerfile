@@ -15,16 +15,19 @@ RUN apk add --no-cache \
 RUN git clone --depth=1 https://github.com/giltene/wrk2.git
 WORKDIR /wrk2
 
-# 使用系统自带的 LuaJIT（不再自行编译）
-# Alpine 的 luajit-dev 已包含 ARM64 可用的 libluajit
+# 使用系统自带的 LuaJIT（避免在 QEMU 中自行编译）
 ENV LUAJIT_LIB=/usr/lib \
     LUAJIT_INC=/usr/include/luajit-2.1
 
 # 替换老旧结构体
 RUN sed -i 's/struct luaL_reg/luaL_Reg/g' src/script.c
 
+# 在 QEMU / buildx 环境下，禁止使用 -march=native
+ENV CFLAGS="-O2 -fno-omit-frame-pointer" \
+    LDFLAGS=""
+
 # 编译 wrk2
-RUN make
+RUN make clean && make
 
 # 运行阶段
 FROM alpine:3.19
