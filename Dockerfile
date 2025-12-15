@@ -35,8 +35,8 @@ RUN make WITH_LIBS=-latomic
 # 运行阶段，基于 Alpine，安装运行时依赖
 FROM alpine:latest
 
-# 安装运行时所需的 luajit 依赖库（包含 libluajit-5.1.so.2）
-RUN apk add --no-cache luajit libgcc libstdc++
+# 安装运行时所需的库，移除不存在的 luajit 包
+RUN apk add --no-cache libgcc libstdc++
 
 # 拷贝编译好的 wrk 二进制和 LuaJIT 库
 COPY --from=builder /wrk2/wrk /usr/local/bin/wrk
