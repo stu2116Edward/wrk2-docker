@@ -2,7 +2,7 @@
 # 基于多阶段构建和Alpine Linux，最终镜像约8MB
 
 # 阶段1: 编译层
-FROM alpine:3.19 AS builder
+FROM alpine:latest AS builder
 
 # 安装构建依赖
 RUN set -eux && apk add --no-cache \
@@ -24,7 +24,7 @@ RUN set -eux && apk add --no-cache \
     && ls -lh /wrk2/wrk
 
 # 阶段2: 运行层
-FROM alpine:3.19
+FROM alpine:latest
 
 # 安装运行时依赖 - libgcc提供libgcc_s.so.1共享库
 RUN apk add --no-cache libgcc
