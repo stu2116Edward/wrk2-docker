@@ -1,7 +1,7 @@
 FROM alpine:latest AS builder
 
-# 安装依赖
-RUN apk add --no-cache \
+# 更新包索引并安装依赖
+RUN apk update && apk add --no-cache \
     openssl-dev \
     zlib-dev \
     git \
@@ -36,7 +36,7 @@ RUN make WITH_LIBS="-latomic"
 FROM alpine:latest
 
 # 安装运行时所需的库
-RUN apk add --no-cache libgcc libstdc++
+RUN apk update && apk add --no-cache libgcc libstdc++
 
 # 拷贝编译好的 wrk 二进制和 LuaJIT 库
 COPY --from=builder /wrk2/wrk /usr/local/bin/wrk
