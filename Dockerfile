@@ -21,12 +21,8 @@ ENV LUAJIT_LIB=/usr/lib \
 
 # 替换老旧结构体
 RUN sed -i 's/struct luaL_reg/luaL_Reg/g' src/script.c
-
-# 在 QEMU / buildx 下会导致非法指令，必须移除
-RUN sed -i 's/-march=native//g' Makefile
-
-# 编译 wrk2
-RUN make clean && make
+RUN make clean || true
+RUN make USE_LUAJIT=system
 
 # 运行阶段
 FROM alpine:3.19
