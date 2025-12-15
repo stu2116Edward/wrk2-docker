@@ -22,9 +22,8 @@ ENV LUAJIT_LIB=/usr/lib \
 # 替换老旧结构体
 RUN sed -i 's/struct luaL_reg/luaL_Reg/g' src/script.c
 
-# 在 QEMU / buildx 环境下，禁止使用 -march=native
-ENV CFLAGS="-O2 -fno-omit-frame-pointer" \
-    LDFLAGS=""
+# 在 QEMU / buildx 下会导致非法指令，必须移除
+RUN sed -i 's/-march=native//g' Makefile
 
 # 编译 wrk2
 RUN make clean && make
